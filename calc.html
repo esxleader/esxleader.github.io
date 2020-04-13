@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-hant">
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>HINA_AI Leveling Calculator</title>
+        
+    </head>
+    <body>
+        <h3>HINA_AI Leveling Calculator</h3>
+        <label for="input_area">請輸入總經驗(Experience)：</label>
+        <input id="input_area" size="10" value="0" onchange="checkzero(this.value);">
+        <p></p>
+        <div id="result"></div>
+        
+    </body>
+    
+    <script type="text/javascript">
+        
+        function checkzero(x) {
+            if (x < 1) {
+                document.getElementById("input_area").setAttribute("style","border-color: red");
+                alert("經驗值必須大於0！");
+            } else if ((x % 1) != 0) {
+                document.getElementById("input_area").setAttribute("style","border-color: red");
+                alert("經驗值必須為數字！");
+            } else {
+                document.getElementById("input_area").setAttribute("style","border-color: initial");
+                calc_xp(x);
+            }
+        }
+        
+        function calc_xp(x) {
+            var y0 = 800*parseInt(x);
+            var y1 = y0+2500
+            var y2 = Math.sqrt(y1);
+            var y3 = y2-250;
+            var y4 = y3/200;
+            
+            //y5 == next level
+            if((y4 % 1) == 0) {
+                //剛好升等
+                var y5 = y4 + 2;
+            } else if(y4 < 0) {
+                //LV小於1
+                var y5 = 1;
+            } else {
+                var y5 = Math.ceil(y4)+1;
+            }
+            
+            var next_level_xp = (100*Math.pow((y5-1),2)+250*(y5-1)+150)/2;
+            var result = next_level_xp - parseInt(x);
+            
+            document.getElementById("result").innerHTML = "還需要 "+result+" 經驗值才升等級 "+y5+"。";
+        }
+        
+    </script> 
+</html>
