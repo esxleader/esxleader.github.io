@@ -47,22 +47,70 @@
             <p></p>
             <div id="result_2"></div>
         </div>
+        <p>-----------------------------------------------------------------------</p>
+        <div>
+            <h5>推算到某個等級需要多少經驗_2</h5>
+            <label for="input_3_1">請輸入目前等級(Level)：</label>
+            <input id="input_3_1" size="10" value="0">
+            <p></p>
+            <label for="input_3_2">請輸入目前經驗(XP)：</label>
+            <input id="input_3_2" size="10" value="0">
+            <p></p>
+            <label for="input_3_3">請選擇目標階級</label>
+            <select id="input_3_3" name="reach_level" class="form-select">
+                <option value="1" id="1w" selected='true'>無</option>
+                <option value="2" id="2w">人類種</option>
+                <option value="5" id="5w">海棲種</option>
+                <option value="10" id="10w">獸人種</option>
+                <option value="25" id="25w">月詠種</option>
+                <option value="50" id="50w">吸血種</option>
+                <option value="100" id="100w">妖魔種</option>
+                <option value="200" id="200w">機凱種</option>
+                <option value="400" id="400w">地精種</option>
+                <option value="800" id="800w">森精種</option>
+                <option value="1300" id="1300w">天翼種</option>
+                <option value="2000" id="2000w">巨人種</option>
+                <option value="2500" id="2500w">龍精種</option>
+                <option value="3500" id="3500w">幻想種</option>
+                <option value="5000" id="5000w">神靈種</option>
+                <option value="10000" id="10000w">特圖</option>
+            </select>
+            <p></p>
+            <button id="btn_03" onclick="calc_level_2();">計算</button>
+            <p></p>
+            <div id="result_3"></div>
+        </div>
         
     </body>
     
     <script type="text/javascript">
         
-        function checkzero(x) {
+        function checkzero(x,id) {
             if (x < 0) {
-                document.getElementById("input_area").setAttribute("style","border-color: red");
+                document.getElementById(id).setAttribute("style","border-color: red");
                 alert("經驗值必須大於0！");
                 return 1;
             } else if ((x % 1) != 0) {
-                document.getElementById("input_area").setAttribute("style","border-color: red");
+                document.getElementById(id).setAttribute("style","border-color: red");
                 alert("經驗值必須為數字！");
                 return 1;
             } else {
-                document.getElementById("input_area").setAttribute("style","border-color: initial");
+                document.getElementById(id).setAttribute("style","border-color: initial");
+                return 0;
+            }
+        }
+        
+        function checkzero_lv(x,id) {
+            if (x < 0) {
+                document.getElementById(id).setAttribute("style","border-color: red");
+                alert("等級必須大於0！");
+                return 1;
+            } else if ((x % 1) != 0) {
+                document.getElementById(id).setAttribute("style","border-color: red");
+                alert("等級必須為數字！");
+                return 1;
+            } else {
+                document.getElementById(id).setAttribute("style","border-color: initial");
                 return 0;
             }
         }
@@ -90,7 +138,7 @@
         }
         
         function calc_01(x) {
-            var ch = checkzero(x);
+            var ch = checkzero(x,"input_area");
             if (ch == 0) {
                 var next_lv = calc_xp(x);
                 show_01(x,next_lv);
@@ -102,15 +150,16 @@
             var result = next_level_xp - parseInt(x);
             document.getElementById("result").innerHTML = "還需要 "+result+" 經驗值才升等級 "+lv+"。";
         }
-        
+        //-----------------------
         function calc_level() {
             var x = document.getElementById("input_2_1").value;
             var target_lv = parseInt(document.getElementById("input_2_2").value);
-            var ch = checkzero(x);
+            var ch = checkzero(x,"input_2_1");
             var now_lv = calc_xp(x) - 1;
             
             if (ch == 0) {
                 if (target_lv > now_lv) {
+                    document.getElementById("input_2_2").setAttribute("style","border-color: initial");
                     show_02(x,target_lv);
                 } else {
                     document.getElementById("input_2_2").setAttribute("style","border-color: red");
@@ -124,6 +173,34 @@
             var next_level_xp = (100*Math.pow((target_lv-1),2)+250*(target_lv-1)+150)/2;
             var result = next_level_xp - parseInt(x);
             document.getElementById("result_2").innerHTML = "還需要 "+result+" 經驗值才升 "+name+"。";
+        }
+        //--------------------------
+        function calc_level_2() {
+            var now_lv = document.getElementById("input_3_1").value;
+            var now_xp = document.getElementById("input_3_2").value;
+            var target_lv = parseInt(document.getElementById("input_3_3").value);
+            var ch = checkzero(now_xp,"input_3_2");
+            var ch_lv = checkzero_lv(now_lv,"input_3_1");
+            
+            if (ch == 0) {
+                if (ch_lv == 0) {
+                    if (target_lv > now_lv) {
+                        document.getElementById("input_3_3").setAttribute("style","border-color: initial");
+                        show_03(parseInt(now_lv),parseInt(now_xp),target_lv);
+                    } else {
+                        document.getElementById("input_3_3").setAttribute("style","border-color: red");
+                        alert("目標階級錯誤！");
+                    }
+                }
+            }
+        }
+        
+        function show_03(now_lv,now_xp,target_lv) {
+            var total_xp = (100*Math.pow((now_lv-1),2)+250*(now_lv-1)+150)/2 + now_xp;
+            var name = document.getElementById(target_lv+'w').innerHTML;
+            var next_level_xp = (100*Math.pow((target_lv-1),2)+250*(target_lv-1)+150)/2;
+            var result = next_level_xp - total_xp;
+            document.getElementById("result_3").innerHTML = "還需要 "+result+" 經驗值才升 "+name+"。";
         }
         
         
